@@ -11,14 +11,15 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class JurnalController extends Controller
 {
+
     public function index()
     {
-        $jurnals = Jurnal::where('user_id', Auth::id())
-            ->orderBy('tanggal_kbm', 'desc')
+        $jurnals = Jurnal::orderBy('tanggal_kbm', 'desc')
             ->paginate(10);
 
         return view('jurnals.index', compact('jurnals'));
     }
+
 
     public function create()
     {

@@ -6,7 +6,11 @@ use App\Http\Controllers\JurnalController;
 
 // ROOT → redirect ke jurnal
 Route::get('/', function () {
-    return redirect()->route('jurnals.index');
+    if (auth()->check()) {
+        return redirect()->route('jurnals.index');
+    }
+
+    return redirect()->route('login');
 });
 
 // SEMUA FITUR DILINDUNGI LOGIN

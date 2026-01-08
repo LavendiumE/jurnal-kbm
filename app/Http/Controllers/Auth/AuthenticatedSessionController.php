@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // redirect ke halaman utama aplikasi
-        return redirect()->route('jurnals.index');
+        return redirect()->intended(route('jurnals.index'));
     }
 
 

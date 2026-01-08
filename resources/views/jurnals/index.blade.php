@@ -5,27 +5,29 @@
 
     <div class="flex justify-end items-center text-sm mb-6 divide-x divide-gray-300">
 
-        <!-- Add Jurnal -->
+        {{-- Add Jurnal (hanya user yg boleh create) --}}
+        @can('create', App\Models\Jurnal::class)
         <a href="{{ route('jurnals.create') }}"
-        class="px-4 py-2 text-green-700
-                hover:bg-green-50 hover:border hover:border-green-300
-                rounded-md transition">
+           class="px-4 py-2 text-green-700
+                  hover:bg-green-50 hover:border hover:border-green-300
+                  rounded-md transition">
             + Add Jurnal
         </a>
+        @endcan
 
-        <!-- Export My Jurnal -->
+        {{-- Export My Jurnal --}}
         <a href="{{ route('jurnals.export.mine') }}"
-        class="px-4 py-2 text-blue-700
-                hover:bg-blue-50 hover:border hover:border-blue-300
-                rounded-md transition">
+           class="px-4 py-2 text-blue-700
+                  hover:bg-blue-50 hover:border hover:border-blue-300
+                  rounded-md transition">
             Export My Jurnal
         </a>
 
-        <!-- Export All Jurnal -->
+        {{-- Export All Jurnal (opsional: admin only) --}}
         <a href="{{ route('jurnals.export.all') }}"
-        class="px-4 py-2 text-slate-700
-                hover:bg-slate-100 hover:border hover:border-slate-300
-                rounded-md transition">
+           class="px-4 py-2 text-slate-700
+                  hover:bg-slate-100 hover:border hover:border-slate-300
+                  rounded-md transition">
             Export All Jurnal
         </a>
 
@@ -81,19 +83,19 @@
                         <td class="border px-4 py-3 text-center">
                             <div class="flex items-center justify-center gap-2">
 
-                                @can('update', $jurnal)
+                                {{-- Edit & Delete hanya milik kreator --}}
+                                @if(auth()->id() === $jurnal->user_id)
+
                                     <a href="{{ route('jurnals.edit', $jurnal->id) }}"
-                                    class="text-blue-600 hover:underline">
+                                       class="text-blue-600 hover:underline">
                                         Edit
                                     </a>
-                                @endcan
 
-                                <span class="text-gray-400">|</span>
+                                    <span class="text-gray-400">|</span>
 
-                                @can('delete', $jurnal)
                                     <form action="{{ route('jurnals.destroy', $jurnal->id) }}"
-                                        method="POST"
-                                        onsubmit="return confirm('Yakin hapus jurnal ini?')">
+                                          method="POST"
+                                          onsubmit="return confirm('Yakin hapus jurnal ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -101,14 +103,20 @@
                                             Hapus
                                         </button>
                                     </form>
-                                @endcan
+
+                                @else
+                                    <span class="text-gray-400 italic text-xs">
+                                        View only
+                                    </span>
+                                @endif
 
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="border px-4 py-8 text-center text-gray-500">
+                        <td colspan="8"
+                            class="border px-4 py-8 text-center text-gray-500">
                             Belum ada jurnal KBM
                         </td>
                     </tr>
