@@ -48,12 +48,12 @@ class JurnalController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['guru']    = auth()->user()->name;
 
-        // 🔧 NORMALISASI CHECKBOX
+        
         $validated['izin']  = $request->has('izin')  ? 1 : 0;
         $validated['sakit'] = $request->has('sakit') ? 1 : 0;
         $validated['alfa']  = $request->has('alfa')  ? 1 : 0;
 
-        // 📸 UPLOAD FOTO
+        // UPLOAD FOTO
         if ($request->hasFile('dokumentasi')) {
             $folder = 'jurnal-photo/' . now()->format('Y-m');
             $validated['dokumentasi'] = $request
