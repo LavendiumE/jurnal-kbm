@@ -8,11 +8,15 @@ Aplikasi ini dibuat sederhana, fokus pada kemudahan penggunaan, dan sesuai denga
 
 ## Fitur Utama
 - Login guru
+- Register guru
 - Input jurnal KBM
 - Edit dan hapus jurnal
 - Menampilkan daftar jurnal
 - Export jurnal ke Excel (CSV)
   - Export jurnal pribadi
+  - Export semua jurnal
+- Logout
+
 
 ---
 
@@ -21,6 +25,7 @@ Aplikasi ini dibuat sederhana, fokus pada kemudahan penggunaan, dan sesuai denga
 - Login ke sistem
 - Mengelola data jurnal KBM milik sendiri
 - Melakukan export jurnal pribadi
+- Melakukan export semua jurnal
 
 > Catatan:  
 > Sistem ini tidak memiliki role admin maupun fitur pengelolaan data master (guru, siswa, kelas, mapel) sesuai dengan kesepakatan awal pengembangan.
@@ -32,16 +37,3 @@ Aplikasi ini dibuat sederhana, fokus pada kemudahan penggunaan, dan sesuai denga
 - PHP 8.4
 - SQLite
 - Tailwind CSS
-
----
-
-## Cara Menjalankan Aplikasi
-1. Clone repository
-2. Install dependency:
-   composer install
-3. Copy env:
-   cp .env.example .env
-4. Generate key:
-   php artisan key:generate
-5. Jalankan:
-   php artisan serve

@@ -11,7 +11,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class JurnalController extends Controller
 {
-
     public function index()
     {
         $jurnals = Jurnal::orderBy('tanggal_kbm', 'desc')
@@ -19,7 +18,6 @@ class JurnalController extends Controller
 
         return view('jurnals.index', compact('jurnals'));
     }
-
 
     public function create()
     {
@@ -30,17 +28,22 @@ class JurnalController extends Controller
     {
         $validated = $request->validate([
             'tanggal_kbm'    => 'required|date',
-            'kelas'          => 'required',
-            'mata_pelajaran' => 'required',
-            'materi'         => 'required',
-            'kegiatan'       => 'nullable',
+            'kelas'          => 'required|string',
+            'mata_pelajaran' => 'required|string',
+            'materi'         => 'required|string',
+            'kegiatan'       => 'nullable|string',
             'jam_mulai'      => 'required',
             'jam_selesai'    => 'required',
-            'hadir'          => 'required|integer',
-            'izin'           => 'required|integer',
-            'sakit'          => 'required|integer',
-            'alfa'           => 'required|integer',
-            'dokumentasi'    => 'nullable|image|max:2048',
+
+            // KEHADIRAN
+            'hadir' => 'required|integer',
+
+            // NAMA MURID (TEXT)
+            'izin'  => 'nullable|string',
+            'sakit' => 'nullable|string',
+            'alfa'  => 'nullable|string',
+
+            'dokumentasi' => 'nullable|image|max:2048',
         ]);
 
         $validated['user_id'] = auth()->id();
@@ -55,7 +58,8 @@ class JurnalController extends Controller
 
         Jurnal::create($validated);
 
-        return redirect()->route('jurnals.index')
+        return redirect()
+            ->route('jurnals.index')
             ->with('success', 'Jurnal berhasil ditambahkan');
     }
 
@@ -74,17 +78,25 @@ class JurnalController extends Controller
             'kegiatan'       => 'nullable|string',
             'jam_mulai'      => 'required',
             'jam_selesai'    => 'required',
-            'hadir'          => 'required|integer',
-            'izin'           => 'required|integer',
-            'sakit'          => 'required|integer',
-            'alfa'           => 'required|integer',
-            'dokumentasi'    => 'nullable|image|max:2048',
+
+            // KEHADIRAN
+            'hadir' => 'required|integer',
+
+            // NAMA MURID (TEXT)
+            'izin'  => 'nullable|string',
+            'sakit' => 'nullable|string',
+            'alfa'  => 'nullable|string',
+
+            'dokumentasi' => 'nullable|image|max:2048',
         ]);
 
         $validated['guru'] = auth()->user()->name;
 
         if ($request->hasFile('dokumentasi')) {
-            if ($jurnal->dokumentasi && \Storage::disk('public')->exists($jurnal->dokumentasi)) {
+            if (
+                $jurnal->dokumentasi &&
+                \Storage::disk('public')->exists($jurnal->dokumentasi)
+            ) {
                 \Storage::disk('public')->delete($jurnal->dokumentasi);
             }
 
@@ -96,7 +108,8 @@ class JurnalController extends Controller
 
         $jurnal->update($validated);
 
-        return redirect()->route('jurnals.index')
+        return redirect()
+            ->route('jurnals.index')
             ->with('success', 'Jurnal berhasil diupdate');
     }
 
@@ -104,7 +117,8 @@ class JurnalController extends Controller
     {
         $jurnal->delete();
 
-        return redirect()->route('jurnals.index')
+        return redirect()
+            ->route('jurnals.index')
             ->with('success', 'Jurnal berhasil dihapus');
     }
 

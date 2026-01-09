@@ -29,6 +29,13 @@ class AllJurnalsExport implements FromCollection, WithHeadings, ShouldAutoSize
                     'Mata Pelajaran' => $jurnal->mata_pelajaran,
                     'Materi'         => $jurnal->materi,
                     'Kegiatan'       => $jurnal->kegiatan,
+
+                    // ✅ KEHADIRAN
+                    'Hadir'          => $jurnal->hadir,
+                    'Izin'           => $jurnal->izin,
+                    'Sakit'          => $jurnal->sakit,
+                    'Alfa'           => $jurnal->alfa,
+
                     'Foto'           => $fotoUrl,
                 ];
             });
@@ -45,6 +52,10 @@ class AllJurnalsExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Mata Pelajaran',
             'Materi',
             'Kegiatan',
+            'Hadir',
+            'Izin',
+            'Sakit',
+            'Alfa',
             'Foto',
         ];
     }

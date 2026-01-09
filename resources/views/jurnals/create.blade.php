@@ -73,32 +73,36 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label>Hadir</label>
+                <label class="block text-sm font-medium">Hadir</label>
                 <input type="number" name="hadir" min="0"
-                       value="{{ old('hadir', 0) }}"
-                       class="w-full border rounded px-3 py-2">
+                    value="{{ old('hadir', 0) }}"
+                    class="mt-1 w-full border rounded px-3 py-2">
             </div>
+
             <div>
-                <label>Izin</label>
-                <input type="number" name="izin" min="0"
-                       value="{{ old('izin', 0) }}"
-                       class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium">Izin</label>
+                <textarea name="izin" rows="3"
+                        class="mt-1 w-full border rounded px-3 py-2"
+                        placeholder="Nama murid izin (pisahkan dengan koma / baris baru)">{{ old('izin') }}</textarea>
             </div>
+
             <div>
-                <label>Sakit</label>
-                <input type="number" name="sakit" min="0"
-                       value="{{ old('sakit', 0) }}"
-                       class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium">Sakit</label>
+                <textarea name="sakit" rows="3"
+                        class="mt-1 w-full border rounded px-3 py-2"
+                        placeholder="Nama murid sakit">{{ old('sakit') }}</textarea>
             </div>
+
             <div>
-                <label>Alfa</label>
-                <input type="number" name="alfa" min="0"
-                       value="{{ old('alfa', 0) }}"
-                       class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium">Alfa</label>
+                <textarea name="alfa" rows="3"
+                        class="mt-1 w-full border rounded px-3 py-2"
+                        placeholder="Nama murid alfa">{{ old('alfa') }}</textarea>
             </div>
         </div>
+
 
         <div>
             <label>Dokumentasi Kegiatan</label>

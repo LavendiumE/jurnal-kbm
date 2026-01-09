@@ -73,39 +73,34 @@
         </div>
 
         {{-- KEHADIRAN --}}
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label>Hadir</label>
+                <label class="block text-sm font-medium">Hadir</label>
                 <input type="number" name="hadir"
-                       value="{{ $jurnal->hadir }}"
-                       min="0"
-                       class="w-full border px-3 py-2 rounded">
+                    value="{{ $jurnal->hadir }}"
+                    min="0"
+                    class="mt-1 w-full border px-3 py-2 rounded">
             </div>
 
             <div>
-                <label>Izin</label>
-                <input type="number" name="izin"
-                       value="{{ $jurnal->izin }}"
-                       min="0"
-                       class="w-full border px-3 py-2 rounded">
+                <label class="block text-sm font-medium">Izin</label>
+                <textarea name="izin" rows="3"
+                        class="mt-1 w-full border px-3 py-2 rounded">{{ $jurnal->izin }}</textarea>
             </div>
 
             <div>
-                <label>Sakit</label>
-                <input type="number" name="sakit"
-                       value="{{ $jurnal->sakit }}"
-                       min="0"
-                       class="w-full border px-3 py-2 rounded">
+                <label class="block text-sm font-medium">Sakit</label>
+                <textarea name="sakit" rows="3"
+                        class="mt-1 w-full border px-3 py-2 rounded">{{ $jurnal->sakit }}</textarea>
             </div>
 
             <div>
-                <label>Alfa</label>
-                <input type="number" name="alfa"
-                       value="{{ $jurnal->alfa }}"
-                       min="0"
-                       class="w-full border px-3 py-2 rounded">
+                <label class="block text-sm font-medium">Alfa</label>
+                <textarea name="alfa" rows="3"
+                        class="mt-1 w-full border px-3 py-2 rounded">{{ $jurnal->alfa }}</textarea>
             </div>
         </div>
+
 
         {{-- FOTO --}}
         <div>
