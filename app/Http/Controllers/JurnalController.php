@@ -35,20 +35,25 @@ class JurnalController extends Controller
             'jam_mulai'      => 'required',
             'jam_selesai'    => 'required',
 
-            // KEHADIRAN
             'hadir' => 'required|integer',
 
-            // NAMA MURID (TEXT)
-            'izin'  => 'nullable|string',
-            'sakit' => 'nullable|string',
-            'alfa'  => 'nullable|string',
+            // checkbox / daftar nama
+            'izin'  => 'nullable',
+            'sakit' => 'nullable',
+            'alfa'  => 'nullable',
 
-            'dokumentasi' => 'nullable|image|max:2048',
+            'dokumentasi' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $validated['user_id'] = auth()->id();
         $validated['guru']    = auth()->user()->name;
 
+        // 🔧 NORMALISASI CHECKBOX
+        $validated['izin']  = $request->has('izin')  ? 1 : 0;
+        $validated['sakit'] = $request->has('sakit') ? 1 : 0;
+        $validated['alfa']  = $request->has('alfa')  ? 1 : 0;
+
+        // 📸 UPLOAD FOTO
         if ($request->hasFile('dokumentasi')) {
             $folder = 'jurnal-photo/' . now()->format('Y-m');
             $validated['dokumentasi'] = $request
@@ -62,6 +67,7 @@ class JurnalController extends Controller
             ->route('jurnals.index')
             ->with('success', 'Jurnal berhasil ditambahkan');
     }
+
 
     public function edit(Jurnal $jurnal)
     {

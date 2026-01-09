@@ -92,14 +92,14 @@
                 <label class="block text-sm font-medium">Sakit</label>
                 <textarea name="sakit" rows="3"
                         class="mt-1 w-full border rounded px-3 py-2"
-                        placeholder="Nama murid sakit">{{ old('sakit') }}</textarea>
+                        placeholder="Nama murid sakit (pisahkan dengan koma / baris baru)">{{ old('sakit') }}</textarea>
             </div>
 
             <div>
                 <label class="block text-sm font-medium">Alfa</label>
                 <textarea name="alfa" rows="3"
                         class="mt-1 w-full border rounded px-3 py-2"
-                        placeholder="Nama murid alfa">{{ old('alfa') }}</textarea>
+                        placeholder="Nama murid alfa (pisahkan dengan koma / baris baru)">{{ old('alfa') }}</textarea>
             </div>
         </div>
 
