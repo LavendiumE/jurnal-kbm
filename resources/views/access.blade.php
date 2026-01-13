@@ -7,7 +7,7 @@
             </h2>
 
             <p class="mt-2 text-sm text-gray-500 text-center">
-                Masukkan kode akses untuk melanjutkan
+                Masukkan kode akses untuk masuk ke aplikasi
             </p>
 
             <form
