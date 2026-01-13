@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'access_code' => env('ACCESS_CODE'),
+
 ];
