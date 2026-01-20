@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\AllJurnalsExport;
 use App\Exports\MyJurnalsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Storage;
+
 
 class JurnalController extends Controller
 {
@@ -43,7 +47,7 @@ class JurnalController extends Controller
             'sakit' => 'nullable',
             'alfa'  => 'nullable',
 
-            'dokumentasi' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'dokumentasi' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
         $validated['user_id'] = auth()->id();
@@ -54,13 +58,66 @@ class JurnalController extends Controller
         $validated['sakit'] = $request->has('sakit') ? 1 : 0;
         $validated['alfa']  = $request->has('alfa')  ? 1 : 0;
 
-        // UPLOAD FOTO
+        // UPLOAD + AUTO COMPRESS FOTO (NATIVE PHP GD)
         if ($request->hasFile('dokumentasi')) {
+
+            $file = $request->file('dokumentasi');
+
+            // Ambil info gambar
+            $imageInfo = getimagesize($file->getPathname());
+            $mime = $imageInfo['mime'];
+
+            // Buat image resource
+            if ($mime === 'image/jpeg') {
+                $source = imagecreatefromjpeg($file->getPathname());
+            } elseif ($mime === 'image/png') {
+                $source = imagecreatefrompng($file->getPathname());
+            } else {
+                throw new \Exception('Format gambar tidak didukung');
+            }
+
+            $width  = imagesx($source);
+            $height = imagesy($source);
+
+            // Resize (max width 1280)
+            $newWidth  = 1280;
+            $newHeight = intval($height * ($newWidth / $width));
+
+            if ($width < 1280) {
+                $newWidth  = $width;
+                $newHeight = $height;
+            }
+
+            $canvas = imagecreatetruecolor($newWidth, $newHeight);
+            imagecopyresampled(
+                $canvas,
+                $source,
+                0, 0, 0, 0,
+                $newWidth,
+                $newHeight,
+                $width,
+                $height
+            );
+
+            // Simpan hasil compress
             $folder = 'jurnal-photo/' . now()->format('Y-m');
-            $validated['dokumentasi'] = $request
-                ->file('dokumentasi')
-                ->store($folder, 'public');
+            $filename = uniqid('jurnal_') . '.jpg';
+
+            ob_start();
+            imagejpeg($canvas, null, 75); // QUALITY 75%
+            $imageData = ob_get_clean();
+
+            \Storage::disk('public')->put($folder . '/' . $filename, $imageData);
+
+            imagedestroy($source);
+            imagedestroy($canvas);
+
+            $validated['dokumentasi'] = $folder . '/' . $filename;
         }
+
+
+
+
 
         Jurnal::create($validated);
 
@@ -95,24 +152,64 @@ class JurnalController extends Controller
             'sakit' => 'nullable|string',
             'alfa'  => 'nullable|string',
 
-            'dokumentasi' => 'nullable|image|max:2048',
+            'dokumentasi' => 'nullable|image|max:10240',
         ]);
 
         $validated['guru'] = auth()->user()->name;
 
-       if ($request->hasFile('dokumentasi')) {
+       // UPLOAD + AUTO COMPRESS FOTO (NATIVE PHP GD)
+        if ($request->hasFile('dokumentasi')) {
 
             $file = $request->file('dokumentasi');
 
-            $image = \Config\Services::image()
-                ->withFile($file)
-                ->resize(1280, 1280, true, 'width') // resize max width
-                ->save(tempnam(sys_get_temp_dir(), 'jurnal_'), 75); // compress 75%
+            // Ambil info gambar
+            $imageInfo = getimagesize($file->getPathname());
+            $mime = $imageInfo['mime'];
 
+            // Buat image resource
+            if ($mime === 'image/jpeg') {
+                $source = imagecreatefromjpeg($file->getPathname());
+            } elseif ($mime === 'image/png') {
+                $source = imagecreatefrompng($file->getPathname());
+            } else {
+                throw new \Exception('Format gambar tidak didukung');
+            }
+
+            $width  = imagesx($source);
+            $height = imagesy($source);
+
+            // Resize (max width 1280)
+            $newWidth  = 1280;
+            $newHeight = intval($height * ($newWidth / $width));
+
+            if ($width < 1280) {
+                $newWidth  = $width;
+                $newHeight = $height;
+            }
+
+            $canvas = imagecreatetruecolor($newWidth, $newHeight);
+            imagecopyresampled(
+                $canvas,
+                $source,
+                0, 0, 0, 0,
+                $newWidth,
+                $newHeight,
+                $width,
+                $height
+            );
+
+            // Simpan hasil compress
             $folder = 'jurnal-photo/' . now()->format('Y-m');
             $filename = uniqid('jurnal_') . '.jpg';
 
-            \Storage::disk('public')->put($folder . '/' . $filename, file_get_contents($image));
+            ob_start();
+            imagejpeg($canvas, null, 75); // QUALITY 75%
+            $imageData = ob_get_clean();
+
+            \Storage::disk('public')->put($folder . '/' . $filename, $imageData);
+
+            imagedestroy($source);
+            imagedestroy($canvas);
 
             $validated['dokumentasi'] = $folder . '/' . $filename;
         }
