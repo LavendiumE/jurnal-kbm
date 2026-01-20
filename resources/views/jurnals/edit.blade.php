@@ -32,6 +32,13 @@
         </div>
 
         <div>
+            <label class="block text-sm font-medium">Nomor Ruangan</label>
+            <input type="text" name="ruang"
+                   value="{{ old('ruang') }}"
+                   class="mt-1 w-full border rounded px-3 py-2" required>
+        </div>
+        
+        <div>
             <label class="block text-sm font-medium">Mata Pelajaran</label>
             <input type="text" name="mata_pelajaran"
                    value="{{ $jurnal->mata_pelajaran }}"
@@ -113,7 +120,14 @@
                      class="w-40 rounded mb-2 border">
             @endif
 
-            <input type="file" name="dokumentasi" accept="image/*">
+            <input
+                type="file"
+                name="dokumentasi"
+                accept="image/*"
+                capture="environment"
+                class="form-control"
+                />
+
             <p class="text-xs text-gray-500 mt-1">
                 Kosongkan jika tidak ingin mengganti foto
             </p>

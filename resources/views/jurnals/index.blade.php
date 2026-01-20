@@ -16,20 +16,22 @@
         @endcan
 
         {{-- Export My Jurnal --}}
-        <a href="{{ route('jurnals.export.mine') }}"
-           class="px-4 py-2 text-blue-700
-                  hover:bg-blue-50 hover:border hover:border-blue-300
-                  rounded-md transition">
+        <button
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#modalExportMine"
+            class="px-4 py-2 text-blue-700 hover:bg-blue-50 hover:border hover:border-blue-300 rounded-md transition">
             Export My Jurnal
-        </a>
+        </button>
 
-        {{-- Export All Jurnal (opsional: admin only) --}}
-        <a href="{{ route('jurnals.export.all') }}"
-           class="px-4 py-2 text-slate-700
-                  hover:bg-slate-100 hover:border hover:border-slate-300
-                  rounded-md transition">
+        <button
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#modalExportAll"
+            class="px-4 py-2 text-slate-700 hover:bg-slate-100 hover:border hover:border-slate-300 rounded-md transition">
             Export All Jurnal
-        </a>
+        </button>
+
 
     </div>
 
@@ -130,4 +132,5 @@
     </div>
 
 </div>
+
 @endsection

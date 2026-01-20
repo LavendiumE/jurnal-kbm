@@ -39,6 +39,13 @@
         </div>
 
         <div>
+            <label class="block text-sm font-medium">Nomor Ruangan</label>
+            <input type="text" name="ruang"
+                   value="{{ old('ruang') }}"
+                   class="mt-1 w-full border rounded px-3 py-2" required>
+        </div>
+
+        <div>
             <label class="block text-sm font-medium">Mata Pelajaran</label>
             <input type="text" name="mata_pelajaran"
                    value="{{ old('mata_pelajaran') }}"
@@ -106,7 +113,14 @@
 
         <div>
             <label>Dokumentasi Kegiatan</label>
-            <input type="file" name="dokumentasi" accept="image/*">
+            <input
+                type="file"
+                name="dokumentasi"
+                accept="image/*"
+                capture="environment"
+                class="form-control"
+                />
+
         </div>
 
         <div class="flex justify-end gap-3 pt-4">

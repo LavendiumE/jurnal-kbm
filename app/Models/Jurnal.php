@@ -13,6 +13,7 @@ class Jurnal extends Model
         'user_id',
         'tanggal_kbm',
         'kelas',
+        'ruang',
         'hadir',
         'izin',
         'sakit',

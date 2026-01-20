@@ -29,6 +29,7 @@ class JurnalController extends Controller
         $validated = $request->validate([
             'tanggal_kbm'    => 'required|date',
             'kelas'          => 'required|string',
+            'ruang'          => 'required|string',
             'mata_pelajaran' => 'required|string',
             'materi'         => 'required|string',
             'kegiatan'       => 'nullable|string',
@@ -79,6 +80,7 @@ class JurnalController extends Controller
         $validated = $request->validate([
             'tanggal_kbm'    => 'required|date',
             'kelas'          => 'required|string',
+            'ruang'          => 'required|string',
             'mata_pelajaran' => 'required|string',
             'materi'         => 'required|string',
             'kegiatan'       => 'nullable|string',
@@ -98,19 +100,23 @@ class JurnalController extends Controller
 
         $validated['guru'] = auth()->user()->name;
 
-        if ($request->hasFile('dokumentasi')) {
-            if (
-                $jurnal->dokumentasi &&
-                \Storage::disk('public')->exists($jurnal->dokumentasi)
-            ) {
-                \Storage::disk('public')->delete($jurnal->dokumentasi);
-            }
+       if ($request->hasFile('dokumentasi')) {
+
+            $file = $request->file('dokumentasi');
+
+            $image = \Config\Services::image()
+                ->withFile($file)
+                ->resize(1280, 1280, true, 'width') // resize max width
+                ->save(tempnam(sys_get_temp_dir(), 'jurnal_'), 75); // compress 75%
 
             $folder = 'jurnal-photo/' . now()->format('Y-m');
-            $validated['dokumentasi'] = $request
-                ->file('dokumentasi')
-                ->store($folder, 'public');
+            $filename = uniqid('jurnal_') . '.jpg';
+
+            \Storage::disk('public')->put($folder . '/' . $filename, file_get_contents($image));
+
+            $validated['dokumentasi'] = $folder . '/' . $filename;
         }
+
 
         $jurnal->update($validated);
 
@@ -128,19 +134,28 @@ class JurnalController extends Controller
             ->with('success', 'Jurnal berhasil dihapus');
     }
 
-    public function exportMine()
+   public function exportMine(Request $request)
     {
         return Excel::download(
-            new MyJurnalsExport(auth()->id()),
+            new MyJurnalsExport(
+                auth()->id(),
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ),
             'jurnal_saya_' . now()->format('Y-m-d') . '.xlsx'
         );
     }
 
-    public function exportAll()
+
+    public function exportAll(Request $request)
     {
         return Excel::download(
-            new AllJurnalsExport,
+            new AllJurnalsExport(
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ),
             'semua_jurnal_' . now()->format('Y-m-d') . '.xlsx'
         );
     }
+
 }

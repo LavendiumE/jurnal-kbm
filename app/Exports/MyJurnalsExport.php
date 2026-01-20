@@ -11,42 +11,52 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 class MyJurnalsExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     protected int $userId;
+    protected $tanggalAwal;
+    protected $tanggalAkhir;
 
-    public function __construct(int $userId)
+    public function __construct(int $userId, $tanggalAwal = null, $tanggalAkhir = null)
     {
-        $this->userId = $userId;
+        $this->userId       = $userId;
+        $this->tanggalAwal  = $tanggalAwal;
+        $this->tanggalAkhir = $tanggalAkhir;
     }
 
     public function collection(): Collection
     {
-        return Jurnal::where('user_id', $this->userId)
-            ->orderBy('tanggal_kbm', 'asc')
-            ->get()
-            ->map(function ($jurnal) {
+        $query = Jurnal::where('user_id', $this->userId)
+            ->orderBy('tanggal_kbm', 'asc');
 
-                $fotoUrl = $jurnal->dokumentasi
-                    ? asset('storage/' . $jurnal->dokumentasi)
-                    : '';
+        // 🔒 Filter range tanggal (opsional)
+        if ($this->tanggalAwal && $this->tanggalAkhir) {
+            $query->whereBetween('tanggal_kbm', [
+                $this->tanggalAwal,
+                $this->tanggalAkhir
+            ]);
+        }
 
-                return [
-                    'Tanggal'        => $jurnal->tanggal_kbm->format('d-m-Y'),
-                    'Jam Mulai'      => $jurnal->jam_mulai,
-                    'Jam Selesai'    => $jurnal->jam_selesai,
-                    'Kelas'          => $jurnal->kelas,
-                    'Guru'           => $jurnal->guru,
-                    'Mata Pelajaran' => $jurnal->mata_pelajaran,
-                    'Materi'         => $jurnal->materi,
-                    'Kegiatan'       => $jurnal->kegiatan,
+        return $query->get()->map(function ($jurnal) {
 
-                    // ✅ KEHADIRAN
-                    'Hadir'          => $jurnal->hadir,
-                    'Izin'           => $jurnal->izin,
-                    'Sakit'          => $jurnal->sakit,
-                    'Alfa'           => $jurnal->alfa,
+            $fotoUrl = $jurnal->dokumentasi
+                ? asset('storage/' . $jurnal->dokumentasi)
+                : '';
 
-                    'Foto'           => $fotoUrl,
-                ];
-            });
+            return [
+                'Tanggal'        => optional($jurnal->tanggal_kbm)->format('d-m-Y'),
+                'Jam Mulai'      => $jurnal->jam_mulai,
+                'Jam Selesai'    => $jurnal->jam_selesai,
+                'Kelas'          => $jurnal->kelas,
+                'ruang'          => $jurnal->ruang,
+                'Guru'           => $jurnal->guru,
+                'Mata Pelajaran' => $jurnal->mata_pelajaran,
+                'Materi'         => $jurnal->materi,
+                'Kegiatan'       => $jurnal->kegiatan,
+                'Hadir'          => $jurnal->hadir,
+                'Izin'           => $jurnal->izin,
+                'Sakit'          => $jurnal->sakit,
+                'Alfa'           => $jurnal->alfa,
+                'Foto'           => $fotoUrl,
+            ];
+        });
     }
 
     public function headings(): array
@@ -56,6 +66,7 @@ class MyJurnalsExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Jam Mulai',
             'Jam Selesai',
             'Kelas',
+            'ruang',
             'Guru',
             'Mata Pelajaran',
             'Materi',
