@@ -42,21 +42,15 @@ class JurnalController extends Controller
 
             'hadir' => 'required|integer',
 
-            // checkbox / daftar nama
-            'izin'  => 'nullable',
-            'sakit' => 'nullable',
-            'alfa'  => 'nullable',
+            'izin'  => 'nullable|string',
+            'sakit' => 'nullable|string',
+            'alfa'  => 'nullable|string',
 
             'dokumentasi' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
         $validated['user_id'] = auth()->id();
         $validated['guru']    = auth()->user()->name;
-
-        
-        $validated['izin']  = $request->has('izin')  ? 1 : 0;
-        $validated['sakit'] = $request->has('sakit') ? 1 : 0;
-        $validated['alfa']  = $request->has('alfa')  ? 1 : 0;
 
         // UPLOAD + AUTO COMPRESS FOTO (NATIVE PHP GD)
         if ($request->hasFile('dokumentasi')) {
@@ -147,7 +141,7 @@ class JurnalController extends Controller
             // KEHADIRAN
             'hadir' => 'required|integer',
 
-            // NAMA MURID (TEXT)
+
             'izin'  => 'nullable|string',
             'sakit' => 'nullable|string',
             'alfa'  => 'nullable|string',
