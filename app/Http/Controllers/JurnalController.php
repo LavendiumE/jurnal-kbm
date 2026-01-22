@@ -42,9 +42,9 @@ class JurnalController extends Controller
 
             'hadir' => 'required|integer',
 
-            'izin'  => 'nullable|string',
-            'sakit' => 'nullable|string',
-            'alfa'  => 'nullable|string',
+            'izin'  => 'nullable',
+            'sakit' => 'nullable',
+            'alfa'  => 'nullable',
 
             'dokumentasi' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
         ]);
@@ -142,9 +142,9 @@ class JurnalController extends Controller
             'hadir' => 'required|integer',
 
 
-            'izin'  => 'nullable|string',
-            'sakit' => 'nullable|string',
-            'alfa'  => 'nullable|string',
+            'izin'  => 'nullable',
+            'sakit' => 'nullable',
+            'alfa'  => 'nullable',
 
             'dokumentasi' => 'nullable|image|max:10240',
         ]);
