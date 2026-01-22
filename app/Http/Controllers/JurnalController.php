@@ -209,7 +209,9 @@ class JurnalController extends Controller
         }
 
 
+        unset($validated['izin'], $validated['sakit'], $validated['alfa']);
         $jurnal->update($validated);
+
 
         return redirect()
             ->route('jurnals.index')
